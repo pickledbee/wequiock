@@ -255,7 +255,7 @@ function showUpdateLink() {
   const url = ScriptApp.getService().getUrl();
   const ui = SpreadsheetApp.getUi();
   if (!url) { ui.alert('Deploy the web app first: Deploy, then New deployment, then Web app.'); return; }
-  const link = url + '?page=update';
+  const link = url;
   const html = HtmlService.createHtmlOutput(
     '<div style="font:16px/1.6 Arial,sans-serif;padding:6px 10px">' +
     '<p>Share this link with anyone who posts updates. They also need the PIN.</p>' +
@@ -365,21 +365,21 @@ function addRow_(sh, row) {
    WEB APP: the website reads this
    ========================================================= */
 function doGet(e) {
-  // Easy update page:  <web app URL>?page=update
-  if (e && e.parameter && e.parameter.page === 'update') {
-    return HtmlService.createHtmlOutputFromFile('index')
-      .setTitle('Update the Wequiock Church Website')
-      .addMetaTag('viewport', 'width=device-width, initial-scale=1')
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  const p = (e && e.parameter) || {};
+  // Data for the website:  <web app URL>?data=1
+  // (The website asks for this behind the scenes.)
+  if (p.data || p.callback) {
+    const json = JSON.stringify(getWebsiteData_());
+    if (p.callback && /^[A-Za-z_$][\w$]*$/.test(p.callback)) {
+      return ContentService.createTextOutput(p.callback + '(' + json + ')').setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
   }
-  // Otherwise: data for the website
-  const data = getWebsiteData_();
-  const json = JSON.stringify(data);
-  const cb = e && e.parameter && e.parameter.callback;
-  if (cb && /^[A-Za-z_$][\w$]*$/.test(cb)) {
-    return ContentService.createTextOutput(cb + '(' + json + ')').setMimeType(ContentService.MimeType.JAVASCRIPT);
-  }
-  return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
+  // Everyone else gets the easy update page (just the plain web app link).
+  return HtmlService.createHtmlOutputFromFile('index')
+    .setTitle('Update the Wequiock Church Website')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 function getWebsiteData_() {

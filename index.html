@@ -523,7 +523,7 @@ drawCal();
 
 // Load live content from the Google Sheet
 if(SHEET_URL){
-  fetch(SHEET_URL).then(r=>r.json()).then(data=>{
+  fetch(SHEET_URL+(SHEET_URL.includes("?")?"&":"?")+"data=1").then(r=>r.json()).then(data=>{
     ANNOUNCEMENTS=data.announcements||[];
     EVENTS=data.events||[];
     drawAnnouncements(); drawCal(); drawNotice(data.notice);
