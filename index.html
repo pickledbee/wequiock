@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NQPMMGD3');</script>
+<!-- End Google Tag Manager -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wequiock Presbyterian Church | Presbyterian Church in Green Bay, WI</title>
@@ -203,6 +210,10 @@
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NQPMMGD3"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <header>
   <div class="wrap bar">
@@ -538,6 +549,11 @@ function route(){
   document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+id));
   document.getElementById("nav").classList.remove("open");
   window.scrollTo(0,0);
+  try{
+    window.dataLayer=window.dataLayer||[];
+    const name=id.charAt(0).toUpperCase()+id.slice(1);
+    dataLayer.push({event:"virtual_page_view",page_path:"/"+(id==="home"?"":id),page_title:name+" | Wequiock Presbyterian Church",page_location:location.origin+"/"+(id==="home"?"":"#"+id)});
+  }catch(e){}
 }
 addEventListener("hashchange",route); route();
 document.getElementById("menuBtn").onclick=()=>document.getElementById("nav").classList.toggle("open");
