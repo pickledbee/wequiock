@@ -549,11 +549,6 @@ function route(){
   document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+id));
   document.getElementById("nav").classList.remove("open");
   window.scrollTo(0,0);
-  try{
-    window.dataLayer=window.dataLayer||[];
-    const name=id.charAt(0).toUpperCase()+id.slice(1);
-    dataLayer.push({event:"virtual_page_view",page_path:"/"+(id==="home"?"":id),page_title:name+" | Wequiock Presbyterian Church",page_location:location.origin+"/"+(id==="home"?"":"#"+id)});
-  }catch(e){}
 }
 addEventListener("hashchange",route); route();
 document.getElementById("menuBtn").onclick=()=>document.getElementById("nav").classList.toggle("open");
