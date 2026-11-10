@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{--green:#2f4a3a;--green2:#3d5e4a;--brick:#7a3b2e;--gold:#b08a3e;--cream:#faf6ee;--paper:#fffdf8;--ink:#2b2a26;--muted:#6b665c;--line:#e6dfcf}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;font-size:19px;line-height:1.5;color:var(--ink);background:var(--cream)}
+  header{background:var(--green);color:#fff;padding:18px 20px;text-align:center}
+  header h1{margin:0;font-family:Georgia,serif;font-size:1.45rem}
+  header p{margin:4px 0 0;opacity:.85;font-size:.95rem}
+  main{max-width:620px;margin:0 auto;padding:22px 18px 60px}
+  h2{font-family:Georgia,serif;color:var(--green);font-size:1.6rem;margin:0 0 14px}
+  label{display:block;font-weight:bold;margin:18px 0 8px}
+  .hint{font-weight:normal;color:var(--muted);font-size:.9rem}
+  input,select,textarea{width:100%;font-size:20px;padding:14px;border:2px solid #cfc6b1;border-radius:10px;background:#fff;font-family:inherit}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+  textarea{min-height:140px;resize:vertical}
+  button{font-family:inherit;cursor:pointer}
+  .big{display:block;width:100%;padding:18px;font-size:21px;font-weight:bold;color:#fff;background:var(--green);border:none;border-radius:12px;margin-top:24px}
+  .big:disabled{opacity:.6}
+  .choice{display:flex;align-items:center;gap:16px;width:100%;text-align:left;padding:22px 20px;margin-bottom:16px;border:none;border-radius:14px;color:#fff;font-size:1.35rem;font-weight:bold;box-shadow:0 6px 16px rgba(0,0,0,.15)}
+  .choice small{display:block;font-weight:normal;font-size:1rem;opacity:.9;margin-top:2px}
+  .choice .ic{font-size:2.2rem;line-height:1}
+  .c1{background:var(--brick)} .c2{background:var(--green)} .c3{background:#9a6a1f}
+  .back{background:none;border:none;color:var(--green);font-size:1.05rem;font-weight:bold;padding:6px 0;margin-bottom:10px}
+  .msg{margin-top:18px;padding:16px;border-radius:10px;font-weight:bold;display:none}
+  .ok{background:#e6efe8;color:var(--green);border:2px solid #b9d0bf}
+  .err{background:#f8e5e1;color:#8a2e1f;border:2px solid #e3b5ab}
+  .list{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:6px 16px;margin-top:10px}
+  .item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .item:last-child{border-bottom:none}
+  .item .t{font-weight:bold}
+  .item .d{color:var(--muted);font-size:.9rem}
+  .rm{flex:none;background:#fff;color:var(--brick);border:2px solid var(--brick);border-radius:8px;padding:8px 12px;font-size:.95rem;font-weight:bold}
+  .section-title{margin:34px 0 4px;font-family:Georgia,serif;color:var(--green);font-size:1.3rem}
+  .empty{color:var(--muted);padding:12px 0}
+  .noticebox{background:var(--brick);color:#fff;border-radius:10px;padding:14px 16px;margin-top:10px}
+  .hidden{display:none!important}
+  .confirm{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:20px}
+  .confirm .box{background:#fff;border-radius:14px;padding:22px;max-width:420px;width:100%}
+  .confirm .row{display:flex;gap:10px;margin-top:18px}
+  .confirm .row button{flex:1;padding:14px;font-size:1.05rem;font-weight:bold;border-radius:10px;border:2px solid var(--green)}
+  .yes{background:var(--brick);border-color:var(--brick)!important;color:#fff}
+  .no{background:#fff;color:var(--green)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Wequiock Presbyterian Church</h1>
+  <p>Website Updates</p>
+</header>
+
+<main>
+  <!-- STEP 1: PIN -->
+  <section id="pinScreen">
+    <h2>Welcome!</h2>
+    <p>Type the church PIN to get started.</p>
+    <form id="pinForm">
+      <label for="pin">PIN</label>
+      <input id="pin" type="password" inputmode="numeric" autocomplete="off" required>
+      <button class="big" id="pinBtn" type="submit">Continue</button>
+    </form>
+    <div class="msg" id="pinMsg"></div>
+  </section>
+
+  <!-- STEP 2: CHOOSE -->
+  <section id="homeScreen" class="hidden">
+    <h2>What would you like to do?</h2>
+    <button class="choice c1" data-go="annScreen"><span class="ic">📢</span><span>Add an Announcement<small>News for the church family</small></span></button>
+    <button class="choice c2" data-go="evScreen"><span class="ic">📅</span><span>Add a Calendar Event<small>Services, meetings, dinners</small></span></button>
+    <button class="choice c3" data-go="noticeScreen"><span class="ic">⚠️</span><span>Urgent Notice<small>Snow days and last-minute changes</small></span></button>
+
+    <div class="section-title">On the website right now</div>
+    <div id="current"><p class="empty">Loading...</p></div>
+  </section>
+
+  <!-- ANNOUNCEMENT -->
+  <section id="annScreen" class="hidden">
+    <button class="back" data-go="homeScreen">‹ Back</button>
+    <h2>Add an Announcement</h2>
+    <form id="annForm">
+      <label for="aTitle">Title</label>
+      <input id="aTitle" required placeholder="Example: Thanksgiving Potluck">
+      <label for="aMsg">Message</label>
+      <textarea id="aMsg" required placeholder="Type the announcement here"></textarea>
+      <label for="aUntil">Take it down after <span class="hint">(optional)</span></label>
+      <input id="aUntil" type="date">
+      <button class="big" type="submit">Post Announcement</button>
+    </form>
+    <div class="msg" id="annMsg"></div>
+  </section>
+
+  <!-- EVENT -->
+  <section id="evScreen" class="hidden">
+    <button class="back" data-go="homeScreen">‹ Back</button>
+    <h2>Add a Calendar Event</h2>
+    <form id="evForm">
+      <label for="eName">Event Name</label>
+      <input id="eName" required placeholder="Example: Christmas Eve Service">
+      <label for="eDate">Date</label>
+      <input id="eDate" type="date" required>
+      <label for="eTime">Time <span class="hint">(optional)</span></label>
+      <input id="eTime" placeholder="Example: 6:00 p.m.">
+      <label for="eDetails">Details <span class="hint">(optional)</span></label>
+      <textarea id="eDetails" placeholder="Anything people should know"></textarea>
+      <label for="eOften">How Often</label>
+      <select id="eOften"><option>One time only</option><option>Every week</option></select>
+      <button class="big" type="submit">Add to Calendar</button>
+    </form>
+    <div class="msg" id="evMsg"></div>
+  </section>
+
+  <!-- NOTICE -->
+  <section id="noticeScreen" class="hidden">
+    <button class="back" data-go="homeScreen">‹ Back</button>
+    <h2>Urgent Notice</h2>
+    <p>This shows in a red bar at the top of every page of the website.</p>
+    <form id="noticeForm">
+      <label for="nMsg">Message</label>
+      <textarea id="nMsg" placeholder="Example: Church is cancelled this Sunday because of snow. Stay safe!"></textarea>
+      <label for="nUntil">Take it down after <span class="hint">(optional)</span></label>
+      <input id="nUntil" type="date">
+      <button class="big" type="submit" style="background:var(--brick)">Show Urgent Notice</button>
+    </form>
+    <button class="big" id="noticeOff" type="button" style="background:#fff;color:var(--brick);border:2px solid var(--brick)">Remove Urgent Notice</button>
+    <div class="msg" id="noticeMsg"></div>
+  </section>
+</main>
+
+<div class="confirm hidden" id="confirm">
+  <div class="box">
+    <p id="confirmText" style="margin:0;font-size:1.1rem"></p>
+    <div class="row"><button class="no" id="cNo">No, keep it</button><button class="yes" id="cYes">Yes, remove</button></div>
+  </div>
+</div>
+
+<script>
+  var PIN = '';
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+
+  function show(id){
+    ['pinScreen','homeScreen','annScreen','evScreen','noticeScreen'].forEach(function(s){ $(s).classList.toggle('hidden', s !== id); });
+    document.querySelectorAll('.msg').forEach(function(m){ m.style.display = 'none'; });
+    window.scrollTo(0,0);
+    if (id === 'homeScreen') loadCurrent();
+  }
+  function say(el, text, good){
+    el.textContent = text; el.className = 'msg ' + (good ? 'ok' : 'err'); el.style.display = 'block';
+  }
+  function today(){
+    var d = new Date(); var p = function(n){ return (n < 10 ? '0' : '') + n; };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  function busy(form, on, label){
+    var b = form.querySelector('button[type=submit]');
+    if (on) { b.dataset.label = b.textContent; b.textContent = 'Saving...'; b.disabled = true; }
+    else { b.textContent = b.dataset.label || label; b.disabled = false; }
+  }
+  function call(fn, args, ok, fail){
+    var r = google.script.run.withSuccessHandler(ok).withFailureHandler(function(e){ fail(e.message || String(e)); });
+    r[fn].apply(r, args);
+  }
+
+  document.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click', function(){ show(b.dataset.go); }); });
+
+  // PIN
+  $('pinForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var pin = $('pin').value; $('pinBtn').disabled = true; $('pinBtn').textContent = 'Checking...';
+    call('webCheckPin', [pin], function(){ PIN = pin; show('homeScreen'); },
+      function(m){ say($('pinMsg'), m, false); $('pinBtn').disabled = false; $('pinBtn').textContent = 'Continue'; });
+  });
+
+  // Current items
+  function loadCurrent(){
+    $('current').innerHTML = '<p class="empty">Loading...</p>';
+    call('webList', [PIN], function(d){
+      var h = '';
+      if (d.notice) h += '<div class="noticebox"><b>Urgent notice is showing:</b><br>' + esc(d.notice) + '</div>';
+      h += '<h3 style="margin:18px 0 0;font-size:1.05rem">Announcements</h3><div class="list">';
+      h += d.announcements.length ? d.announcements.map(function(a){
+        return '<div class="item"><div><div class="t">' + esc(a.title) + '</div><div class="d">' + esc(a.date) + '</div></div>' +
+               '<button class="rm" data-type="announcement" data-row="' + a.row + '" data-title="' + esc(a.title) + '">Remove</button></div>';
+      }).join('') : '<p class="empty">No announcements showing.</p>';
+      h += '</div><h3 style="margin:18px 0 0;font-size:1.05rem">Calendar Events</h3><div class="list">';
+      h += d.events.length ? d.events.map(function(ev){
+        return '<div class="item"><div><div class="t">' + esc(ev.title) + '</div><div class="d">' + esc(ev.date) + (ev.time ? ', ' + esc(ev.time) : '') + '</div></div>' +
+               '<button class="rm" data-type="event" data-row="' + ev.row + '" data-title="' + esc(ev.title) + '">Remove</button></div>';
+      }).join('') : '<p class="empty">No upcoming events.</p>';
+      h += '</div>';
+      $('current').innerHTML = h;
+      document.querySelectorAll('.rm').forEach(function(b){ b.addEventListener('click', function(){ askRemove(b); }); });
+    }, function(m){ $('current').innerHTML = '<p class="empty">' + esc(m) + '</p>'; });
+  }
+
+  var pending = null;
+  function askRemove(b){
+    pending = b;
+    $('confirmText').textContent = 'Remove "' + b.dataset.title + '" from the website?';
+    $('confirm').classList.remove('hidden');
+  }
+  $('cNo').onclick = function(){ $('confirm').classList.add('hidden'); pending = null; };
+  $('cYes').onclick = function(){
+    var b = pending; $('confirm').classList.add('hidden'); if (!b) return;
+    b.textContent = 'Removing...'; b.disabled = true;
+    call('webHide', [PIN, b.dataset.type, b.dataset.row], loadCurrent, function(m){ b.textContent = 'Remove'; b.disabled = false; alertBox(m); });
+  };
+  function alertBox(m){ $('confirmText').textContent = m; $('confirm').classList.remove('hidden'); }
+
+  // Announcement
+  $('annForm').addEventListener('submit', function(e){
+    e.preventDefault(); var f = this; busy(f, true);
+    call('webSaveAnnouncement', [PIN, { title: $('aTitle').value, message: $('aMsg').value, posted: today(), until: $('aUntil').value }],
+      function(t){ busy(f, false); f.reset(); say($('annMsg'), t, true); },
+      function(m){ busy(f, false); say($('annMsg'), m, false); });
+  });
+
+  // Event
+  $('eDate').value = today();
+  $('evForm').addEventListener('submit', function(e){
+    e.preventDefault(); var f = this; busy(f, true);
+    call('webSaveEvent', [PIN, { name: $('eName').value, date: $('eDate').value, time: $('eTime').value, details: $('eDetails').value, often: $('eOften').value }],
+      function(t){ busy(f, false); f.reset(); $('eDate').value = today(); say($('evMsg'), t, true); },
+      function(m){ busy(f, false); say($('evMsg'), m, false); });
+  });
+
+  // Notice
+  $('noticeForm').addEventListener('submit', function(e){
+    e.preventDefault(); var f = this;
+    if (!$('nMsg').value.trim()) { say($('noticeMsg'), 'Please type a message first.', false); return; }
+    busy(f, true);
+    call('webSaveNotice', [PIN, { message: $('nMsg').value, until: $('nUntil').value, show: 'Show this notice on the website' }],
+      function(t){ busy(f, false); say($('noticeMsg'), t, true); },
+      function(m){ busy(f, false); say($('noticeMsg'), m, false); });
+  });
+  $('noticeOff').addEventListener('click', function(){
+    var b = this; b.disabled = true;
+    call('webSaveNotice', [PIN, { message: '', until: '', show: 'Remove' }],
+      function(t){ b.disabled = false; $('nMsg').value = ''; say($('noticeMsg'), t, true); },
+      function(m){ b.disabled = false; say($('noticeMsg'), m, false); });
+  });
+</script>
+</body>
+</html>
