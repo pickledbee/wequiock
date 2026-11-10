@@ -147,13 +147,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .steps li{counter-increment:s;position:relative;padding:0 0 18px 52px}
   .steps li::before{content:counter(s);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600}
 
-  /* Give */
-  .give-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-  .amounts{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-  .amounts button{padding:10px 16px;border:2px solid var(--green);background:#fff;color:var(--green);border-radius:6px;font:inherit;font-weight:600;cursor:pointer}
-  .amounts button.on{background:var(--green);color:#fff}
-  address{font-style:normal;font-weight:600;line-height:1.5;margin-top:8px}
-
   /* Calendar */
   .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
   .cal-head button{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:8px 14px;cursor:pointer;font:inherit}
@@ -231,7 +224,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li><a href="#home">Home</a></li>
         <li><a href="#announcements">Announcements</a></li>
         <li><a href="#membership">Membership</a></li>
-        <li><a href="#give">Give</a></li>
         <li><a href="#calendar">Calendar</a></li>
         <li><a href="#history">History</a></li>
         <li><a href="#pictures">Pictures</a></li>
@@ -341,38 +333,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div style="margin-top:18px"><button class="btn" type="submit">Send</button></div>
       <div class="ok" id="memberOk"></div>
     </form>
-  </div>
-</section>
-
-<!-- GIVE -->
-<section class="page" id="give">
-  <div class="wrap">
-    <div class="eyebrow">Generosity</div>
-    <h2>Give to Wequiock</h2>
-    <p class="lead">Your gifts support worship, care for our historic building, and our mission in the community and beyond. Thank you for your generosity.</p>
-
-    <div class="give-grid" style="margin-top:24px">
-      <div class="card">
-        <h3>Give Online</h3>
-        <p>Choose an amount and a fund.</p>
-        <div class="amounts" id="amounts">
-          <button type="button">$25</button><button type="button">$50</button><button type="button">$100</button><button type="button">$250</button><button type="button">Other</button>
-        </div>
-        <label for="fund">Fund</label>
-        <select id="fund"><option>General Offering</option><option>Building Fund</option><option>Mission &amp; Outreach</option><option>Memorial Gift</option></select>
-        <div style="margin-top:16px"><button class="btn" type="button" id="giveBtn">Continue to Give</button></div>
-        <div class="ok" id="giveOk">Online giving is being set up. Until then, please give by mail or in person. Thank you!</div>
-      </div>
-      <div class="card">
-        <h3>Give by Mail</h3>
-        <p>Make checks payable to <strong>Wequiock Presbyterian Church</strong> and mail to:</p>
-        <address>Wequiock Presbyterian Church<br>4014 Wequiock Road<br>Green Bay, WI 54311</address>
-      </div>
-      <div class="card">
-        <h3>Give in Person</h3>
-        <p>Place your gift in the offering plate during Sunday worship. Envelopes are available in the narthex for designated gifts.</p>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -549,7 +509,7 @@ document.querySelectorAll("[data-photo]").forEach(box=>{
 });
 
 // Routing
-const pages=["home","announcements","membership","give","calendar","history","pictures"];
+const pages=["home","announcements","membership","calendar","history","pictures"];
 function route(){
   const id=pages.includes(location.hash.slice(1))?location.hash.slice(1):"home";
   document.querySelectorAll(".page").forEach(p=>p.classList.toggle("show",p.id===id));
@@ -593,11 +553,6 @@ document.getElementById("memberForm").addEventListener("submit",e=>{
   ok.style.display="block";
 });
 
-// Give
-document.querySelectorAll("#amounts button").forEach(b=>b.onclick=()=>{
-  document.querySelectorAll("#amounts button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
-});
-document.getElementById("giveBtn").onclick=()=>document.getElementById("giveOk").style.display="block";
 
 // Calendar
 let view=new Date(); view.setDate(1);
