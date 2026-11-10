@@ -350,7 +350,7 @@
       <div class="tl">
         <div class="yr">1943</div>
         <h3>Two churches become one</h3>
-        <p>After the Humboldt congregation closed, its building was moved to Wequiock and joined to the back of our church. Our history booklet gives the year as 1943, though another local history says around 1930. That 25 by 51 foot building became our Sunday Room and Fellowship Hall, so today our church is really two historic churches under one roof.</p>
+        <p>After the Humboldt congregation closed, its building was moved to Wequiock and joined to the back of our church. Our history booklet gives the year as 1943, though another local history says around 1930. That 25 by 51 foot building became our Sunday School room and Fellowship Hall, so today our church is really two historic churches under one roof.</p>
       </div>
       <div class="tl">
         <div class="yr">1975</div>
@@ -427,6 +427,40 @@ let EVENTS = [
   {date:"2026-11-26", time:"", title:"Thanksgiving Day", details:"", weekly:false},
   {date:"2026-12-24", time:"", title:"Christmas Eve Candlelight Service", details:"", weekly:false}
 ];
+// Church-year days from the Presbyterian Church (U.S.A.) calendar.
+// These always show on the calendar, along with anything added in the Google Sheet.
+const CHURCH_YEAR = [
+  ["2026-11-22","Christ the King Sunday"],
+  ["2026-11-29","First Sunday of Advent","Advent begins. The candle of Hope is lit."],
+  ["2026-12-06","Second Sunday of Advent","The candle of Peace is lit."],
+  ["2026-12-13","Third Sunday of Advent","The candle of Joy is lit."],
+  ["2026-12-20","Fourth Sunday of Advent","The candle of Love is lit."],
+  ["2026-12-25","Christmas Day"],
+  ["2027-01-06","Epiphany of the Lord"],
+  ["2027-01-10","Baptism of the Lord"],
+  ["2027-02-07","Transfiguration Sunday"],
+  ["2027-02-10","Ash Wednesday","Lent begins."],
+  ["2027-03-21","Palm Sunday","Holy Week begins."],
+  ["2027-03-25","Maundy Thursday"],
+  ["2027-03-26","Good Friday"],
+  ["2027-03-28","Easter Sunday","Christ is risen!"],
+  ["2027-05-06","Ascension of the Lord"],
+  ["2027-05-16","Day of Pentecost"],
+  ["2027-05-23","Trinity Sunday"],
+  ["2027-10-03","World Communion Sunday"],
+  ["2027-10-31","Reformation Sunday"],
+  ["2027-11-01","All Saints' Day"],
+  ["2027-11-21","Christ the King Sunday"],
+  ["2027-11-28","First Sunday of Advent","Advent begins. The candle of Hope is lit."],
+  ["2027-12-05","Second Sunday of Advent","The candle of Peace is lit."],
+  ["2027-12-12","Third Sunday of Advent","The candle of Joy is lit."],
+  ["2027-12-19","Fourth Sunday of Advent","The candle of Love is lit."],
+  ["2027-12-24","Christmas Eve"],
+  ["2027-12-25","Christmas Day"]
+].map(([date,title,details])=>({date,time:"",title,details:details||"",weekly:false,church:true}));
+
+// Communion is served at worship on the first Sunday of every month.
+const COMMUNION = {time:"10:00 a.m.", title:"Communion", details:"Communion is served at worship on the first Sunday of every month.", weekly:false};
 /* -------------------------------- */
 
 // Photo with fallback illustration (shows if the photo can't load)
@@ -499,11 +533,14 @@ let view=new Date(); view.setDate(1);
 const pad=n=>String(n).padStart(2,"0");
 function eventsOn(y,m,d){
   const key=`${y}-${pad(m+1)}-${pad(d)}`, dow=new Date(y,m,d).getDay();
-  return EVENTS.filter(e=>{
+  const list=EVENTS.concat(CHURCH_YEAR).filter(e=>{
     if(e.date===key) return true;
     if(!e.weekly||!e.date||key<e.date) return false;
     const p=e.date.split("-"); return new Date(+p[0],+p[1]-1,+p[2]).getDay()===dow;
-  }).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
+  });
+  if(dow===0 && d<=7) list.push(COMMUNION);
+  // church-year day names first, then events by time
+  return list.sort((a,b)=>(b.church?1:0)-(a.church?1:0)||(a.time||"").localeCompare(b.time||""));
 }
 function drawCal(){
   const y=view.getFullYear(), m=view.getMonth();
