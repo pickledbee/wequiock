@@ -246,6 +246,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .nl-mast,.nl-issue,.nl-box,.nl-feature{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .nl-body h3{break-after:avoid}
     .nl-feature,.nl-box,.glance tr{break-inside:avoid}
+    /* LARGE PRINT for easy reading */
+    html{font-size:22pt}
+    body,.nl,.nl-body p,.glance,.candles li{color:#000!important;font-size:22pt;line-height:1.45}
+    .nl-mast{padding:24pt 18pt}
+    .nl-mast .kicker{font-size:16pt;letter-spacing:3pt;opacity:1}
+    .nl-mast h2{font-size:48pt}
+    .nl-mast .tag{font-size:22pt;color:#fff}
+    .nl-issue{font-size:18pt;padding:8pt}
+    .nl-body{padding:6pt 0 0}
+    .nl-body h3{font-size:32pt;color:#000;border-bottom:4pt solid var(--gold);margin:26pt 0 12pt;break-after:avoid}
+    .nl-cols{display:block}
+    .nl-feature{background:#fff;border:3pt solid #000;border-left:12pt solid #7a3b2e;padding:12pt 16pt;margin:14pt 0}
+    .nl-feature .when{font-size:22pt;color:#7a3b2e}
+    .nl-feature h4{font-size:30pt;color:#000;font-weight:700}
+    .candles li{border-bottom:2pt solid #ccc;padding:8pt 0}
+    .candles b,.glance td:first-child{color:#000}
+    .glance td{padding:10pt 6pt;border-bottom:2pt solid #ccc;font-size:22pt}
+    .glance td:first-child{white-space:normal;width:30%}
+    .nl-box{background:#fff!important;color:#000!important;border:4pt solid var(--green);padding:14pt 16pt}
+    .nl-box h4{color:#000;font-size:28pt;font-weight:700}
+    .nl-box a,.nl-body a{color:#000;text-decoration:none}
+    .nl-foot{font-size:22pt;color:#000;background:#fff;border-top:4pt solid var(--gold);padding:16pt 0}
   }
   footer{background:var(--green);color:#e8efe9;padding:36px 0;font-size:.95rem}
   footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
@@ -357,8 +379,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="nl-top">
       <div><div class="eyebrow">Church News</div><h2 style="margin:0">Newsletter</h2></div>
       <div class="btns" style="margin:0">
-        <a class="btn" href="wequiock-newsletter-december-2026.pdf" target="_blank" rel="noopener">Download PDF</a>
-        <button class="btn ghost" type="button" onclick="try{window.print()}catch(e){}">Print</button>
+        <a class="btn" href="wequiock-newsletter-december-2026-large-print.pdf" target="_blank" rel="noopener">Large Print PDF</a>
+        <button class="btn ghost" type="button" onclick="try{window.print()}catch(e){}">Print (Large Print)</button>
+        <a class="btn ghost" href="wequiock-newsletter-december-2026.pdf" target="_blank" rel="noopener">Regular PDF</a>
       </div>
     </div>
 
