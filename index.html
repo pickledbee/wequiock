@@ -397,7 +397,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <div class="nl-audio">
-      <span class="lbl">🔊 Listen to this newsletter (about 4½ minutes)</span>
+      <span class="lbl">🔊 Listen to this newsletter (about 5 minutes)</span>
       <audio id="nlAudio" controls preload="none" src="wequiock-newsletter-december-2026.mp3"></audio>
     </div>
 
@@ -834,6 +834,9 @@ drawCal();
 (function(){
   const btn=document.getElementById("listenBtn"), lbl=document.getElementById("listenLbl");
   const audio=document.getElementById("nlAudio");
+  // Pages with a recorded reading (natural voice). Other pages use the device's voice.
+  const PAGE_AUDIO={home:"audio/home.mp3",membership:"audio/membership.mp3",give:"audio/give.mp3",history:"audio/history.mp3"};
+  const pageAudio=new Audio(); pageAudio.preload="none";
   const synth=window.speechSynthesis;
   let speaking=false, voice=null;
 
@@ -856,6 +859,7 @@ drawCal();
     const c=sec.cloneNode(true);
     c.querySelectorAll("button,form,select,input,textarea,audio,script,style,svg,.nl-top,.nl-audio,.cal-head,.cal,.note.sample").forEach(e=>e.remove());
     return (c.innerText||c.textContent||"")
+      .replace(/Wequiock/g,"Weequiock")
       .replace(/(\d{1,2}):00\s*a\.m\./gi,"$1 A M").replace(/(\d{1,2}):00\s*p\.m\./gi,"$1 P M")
       .replace(/a\.m\./gi,"A M").replace(/p\.m\./gi,"P M").replace(/·/g,", ").replace(/\s*\n+\s*/g,". ").replace(/\.\s*\./g,".").replace(/\s{2,}/g," ").trim();
   }
@@ -867,11 +871,18 @@ drawCal();
   function stopAll(){
     if(synth) synth.cancel();
     if(audio&&!audio.paused) audio.pause();
+    if(!pageAudio.paused){pageAudio.pause();pageAudio.currentTime=0;}
     speaking=false; setState(false);
   }
   function speak(){
     const sec=currentPage(); if(!sec) return;
     if(sec.id==="newsletter"&&audio){ audio.play().catch(()=>{}); return; }
+    if(PAGE_AUDIO[sec.id]){
+      if(synth) synth.cancel();
+      if(!pageAudio.src.endsWith(PAGE_AUDIO[sec.id])) pageAudio.src=PAGE_AUDIO[sec.id];
+      pageAudio.currentTime=0; pageAudio.play().then(()=>setState(true)).catch(()=>{});
+      return;
+    }
     if(!synth){ return; }
     synth.cancel(); speaking=true; setState(true);
     const parts=chunks(pageText(sec));
@@ -884,7 +895,7 @@ drawCal();
     });
   }
   btn.addEventListener("click",()=>{
-    const playingAudio=audio&&!audio.paused;
+    const playingAudio=(audio&&!audio.paused)||!pageAudio.paused;
     if(speaking||playingAudio) stopAll(); else speak();
   });
   if(audio){
@@ -892,10 +903,11 @@ drawCal();
     audio.addEventListener("pause",()=>setState(false));
     audio.addEventListener("ended",()=>setState(false));
   }
+  pageAudio.addEventListener("ended",()=>setState(false));
   addEventListener("hashchange",stopAll);
   // Hide the button only if this device can't read aloud at all
   if(!synth){
-    const upd=()=>{ const s=currentPage(); btn.style.display=(s&&s.id==="newsletter")?"flex":"none"; };
+    const upd=()=>{ const s=currentPage(); btn.style.display=(s&&(s.id==="newsletter"||PAGE_AUDIO[s.id]))?"flex":"none"; };
     addEventListener("hashchange",upd); upd();
   }
 })();
