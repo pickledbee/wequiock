@@ -479,13 +479,27 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbxxyBzgbqYMOz0icgUdHn
 // Shown only if SHEET_URL is blank or the sheet can't be reached.
 let ANNOUNCEMENTS = [
   {date:"", title:"Welcome, visitors!", message:"Guests are always welcome. Stay after worship for coffee and fellowship."},
-  {date:"", title:"Christmas Eve Service", message:"Join us for a candlelight service of carols and scripture on Christmas Eve."}
+  {date:"", title:"Weather cancellations", message:"If services are cancelled for snow or bad weather, we will post a notice at the top of the website."}
 ];
 let EVENTS = [
   {date:"2026-01-04", time:"10:00 a.m.", title:"Worship & Sunday School", details:"Everyone is welcome.", weekly:true},
-  {date:"2026-11-26", time:"", title:"Thanksgiving Day", details:"", weekly:false},
-  {date:"2026-12-24", time:"", title:"Christmas Eve Candlelight Service", details:"", weekly:false}
+  {date:"2026-11-26", time:"", title:"Thanksgiving Day", details:"", weekly:false}
 ];
+// Christmas season 2026 – also in the December newsletter.
+// These show no matter what is in the Google Sheet, and drop off by themselves after their dates.
+const SEASON_EVENTS = [
+  {date:"2026-12-06", time:"", title:"Christmas Pageant Rehearsal", details:""},
+  {date:"2026-12-13", time:"", title:"Christmas Pageant", details:"Fellowship time follows the pageant. Everyone is welcome!"},
+  {date:"2026-12-24", time:"7:00 p.m.", title:"Christmas Eve Service", details:"Join us as we celebrate the birth of Christ.", replaces:"christmas eve"},
+  {date:"2026-12-27", time:"", title:"No Sunday School", details:"There is no Sunday School today.", noSundaySchool:true},
+  {date:"2027-01-03", time:"", title:"No Sunday School", details:"There is no Sunday School today.", noSundaySchool:true}
+].map(e=>Object.assign({weekly:false,special:true},e));
+
+const PINNED_ANNOUNCEMENTS = [
+  {date:"2026-11-20", until:"2027-01-03", title:"Christmas at Wequiock",
+   message:"Pageant Rehearsal: Sunday, December 6\nChristmas Pageant: Sunday, December 13, with fellowship time following\nChristmas Eve Service: Thursday, December 24 at 7:00 p.m.\nNo Sunday School: December 27 and January 3\n\nWe hope you will join us as we celebrate the season together!"}
+];
+
 // Church-year days from the Presbyterian Church (U.S.A.) calendar.
 // These always show on the calendar, along with anything added in the Google Sheet.
 const CHURCH_YEAR = [
@@ -557,7 +571,9 @@ function niceDate(iso){
 }
 function drawAnnouncements(){
   const box=document.getElementById("annList");
-  box.innerHTML=ANNOUNCEMENTS.length?ANNOUNCEMENTS.map(a=>
+  const t=new Date(), today=`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`;
+  const all=PINNED_ANNOUNCEMENTS.filter(a=>!a.until||a.until>=today).concat(ANNOUNCEMENTS);
+  box.innerHTML=all.length?all.map(a=>
     `<div class="ann">${a.date?`<div class="date">${niceDate(a.date)}</div>`:""}<h3>${esc(a.title)}</h3><p>${esc(a.message).replace(/\n/g,"<br>")}</p></div>`).join("")
     :"<p>No announcements right now. Check back soon!</p>";
 }
@@ -587,12 +603,20 @@ let view=new Date(); view.setDate(1);
 const pad=n=>String(n).padStart(2,"0");
 function eventsOn(y,m,d){
   const key=`${y}-${pad(m+1)}-${pad(d)}`, dow=new Date(y,m,d).getDay();
-  const list=EVENTS.concat(CHURCH_YEAR).filter(e=>{
+  const todays=SEASON_EVENTS.filter(e=>e.date===key);
+  const replaced=todays.map(e=>e.replaces).filter(Boolean);
+  const noSS=todays.some(e=>e.noSundaySchool);
+  const list=EVENTS.concat(CHURCH_YEAR,SEASON_EVENTS).filter(e=>{
+    if(!e.special && e.date===key && replaced.some(r=>(e.title||"").toLowerCase().includes(r))) return false;
     if(e.date===key) return true;
     if(!e.weekly||!e.date||key<e.date) return false;
     const p=e.date.split("-"); return new Date(+p[0],+p[1]-1,+p[2]).getDay()===dow;
   });
   if(dow===0 && d<=7) list.push(COMMUNION);
+  if(noSS) for(let i=0;i<list.length;i++){
+    if(/sunday school/i.test(list[i].title)&&!list[i].special)
+      list[i]=Object.assign({},list[i],{title:list[i].title.replace(/\s*(&|and)\s*Sunday School/i,"")});
+  }
   // church-year day names first, then events by time
   return list.sort((a,b)=>(b.church?1:0)-(a.church?1:0)||(a.time||"").localeCompare(b.time||""));
 }
