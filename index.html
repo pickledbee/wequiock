@@ -269,6 +269,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .nl-box a,.nl-body a{color:#000;text-decoration:none}
     .nl-foot{font-size:22pt;color:#000;background:#fff;border-top:4pt solid var(--gold);padding:16pt 0}
   }
+  /* Listen button */
+  #listenBtn{position:fixed;right:16px;bottom:16px;z-index:50;display:flex;align-items:center;gap:10px;min-height:64px;padding:12px 22px 12px 18px;border:3px solid #fff;border-radius:40px;background:#7a3b2e;color:#fff;font:600 1.25rem "Source Sans 3",system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.3);cursor:pointer}
+  #listenBtn:hover,#listenBtn:focus-visible{background:#8f4636;outline:3px solid var(--gold)}
+  #listenBtn svg{width:30px;height:30px;flex:none}
+  #listenBtn.playing{background:var(--green)}
+  @media (max-width:480px){#listenBtn{right:12px;bottom:12px;font-size:1.15rem;padding:10px 18px 10px 14px}}
+  .nl-audio{background:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:16px 18px;margin:0 auto 20px;max-width:860px}
+  .nl-audio .lbl{font-weight:600;font-size:1.15rem;color:var(--green);margin-bottom:8px;display:block}
+  .nl-audio audio{width:100%;height:48px}
+  footer{padding-bottom:110px!important}
+  @media print{#listenBtn,.nl-audio{display:none!important}}
   footer{background:var(--green);color:#e8efe9;padding:36px 0;font-size:.95rem}
   footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
   footer h3{color:#fff;font-size:1.25rem}
@@ -385,6 +396,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
 
+    <div class="nl-audio">
+      <span class="lbl">🔊 Listen to this newsletter (about 4½ minutes)</span>
+      <audio id="nlAudio" controls preload="none" src="wequiock-newsletter-december-2026.mp3"></audio>
+    </div>
+
     <article class="nl">
       <div class="nl-mast">
         <div class="kicker">Wequiock Presbyterian Church</div>
@@ -396,7 +412,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="nl-body">
         <h3>Welcome to the Season of Advent</h3>
         <p>As the days grow shorter and the first snow settles across the fields along Wequiock Road, the church year begins again with Advent: four Sundays of waiting, watching, and preparing our hearts for the coming of Christ. It is a season of hope in the dark, and there is no better place to spend it than together with our church family.</p>
-        <p>Whether you have worshiped at Wequiock for decades or are reading about us for the first time, we would be so glad to see you this December. Come early, bring a friend, and stay for a cup of coffee.</p>
+        <p>Whether you have worshiped at Wequiock for decades or are reading about us for the first time, we would be so glad to see you this December. Come early and bring a friend!</p>
 
         <h3>Christmas at Wequiock</h3>
         <div class="nl-feature">
@@ -633,6 +649,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="wrap credit">This Website Was Built by <a href="https://hirebruce.com" target="_blank" rel="noopener">HireBruce.com</a></div>
 </footer>
 
+<button id="listenBtn" type="button" aria-label="Listen to this page read out loud">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z" fill="#fff"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>
+  <span id="listenLbl">Listen</span>
+</button>
+
 <script>
 /* ---------- EDIT THESE ---------- */
 const PHOTO_URL = "https://legacy.wisconsinhistory.org/WHPD-Images/web/44331.jpg";
@@ -644,7 +665,7 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbxxyBzgbqYMOz0icgUdHn
 
 // Shown only if SHEET_URL is blank or the sheet can't be reached.
 let ANNOUNCEMENTS = [
-  {date:"", title:"Welcome, visitors!", message:"Guests are always welcome. Stay after worship for coffee and fellowship."},
+  {date:"", title:"Welcome, visitors!", message:"Guests are always welcome. We would love to meet you!"},
   {date:"", title:"Weather cancellations", message:"If services are cancelled for snow or bad weather, we will post a notice at the top of the website."}
 ];
 let EVENTS = [
@@ -807,6 +828,77 @@ function drawCal(){
 document.getElementById("prevM").onclick=()=>{view.setMonth(view.getMonth()-1);drawCal()};
 document.getElementById("nextM").onclick=()=>{view.setMonth(view.getMonth()+1);drawCal()};
 drawCal();
+
+
+// ---------- Listen: read the page out loud ----------
+(function(){
+  const btn=document.getElementById("listenBtn"), lbl=document.getElementById("listenLbl");
+  const audio=document.getElementById("nlAudio");
+  const synth=window.speechSynthesis;
+  let speaking=false, voice=null;
+
+  function pickVoice(){
+    if(!synth) return;
+    const vs=synth.getVoices().filter(v=>/^en(-|_)?(US|GB|CA|AU)?/i.test(v.lang));
+    const prefs=[/natural/i,/neural/i,/online/i,/premium/i,/enhanced/i,/siri/i,/google us english/i,/samantha/i,/aria/i,/jenny/i,/guy/i,/daniel/i,/karen/i];
+    for(const r of prefs){const v=vs.find(v=>r.test(v.name)&&/US/i.test(v.lang))||vs.find(v=>r.test(v.name)); if(v){voice=v;return;}}
+    voice=vs.find(v=>/US/i.test(v.lang))||vs[0]||null;
+  }
+  if(synth){pickVoice(); if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged=pickVoice;}
+
+  function currentPage(){return document.querySelector(".page.show");}
+  function setState(on){
+    btn.classList.toggle("playing",on);
+    lbl.textContent=on?"Stop":"Listen";
+    btn.setAttribute("aria-label",on?"Stop reading":"Listen to this page read out loud");
+  }
+  function pageText(sec){
+    const c=sec.cloneNode(true);
+    c.querySelectorAll("button,form,select,input,textarea,audio,script,style,svg,.nl-top,.nl-audio,.cal-head,.cal,.note.sample").forEach(e=>e.remove());
+    return (c.innerText||c.textContent||"")
+      .replace(/(\d{1,2}):00\s*a\.m\./gi,"$1 A M").replace(/(\d{1,2}):00\s*p\.m\./gi,"$1 P M")
+      .replace(/a\.m\./gi,"A M").replace(/p\.m\./gi,"P M").replace(/·/g,", ").replace(/\s*\n+\s*/g,". ").replace(/\.\s*\./g,".").replace(/\s{2,}/g," ").trim();
+  }
+  function chunks(t){
+    const out=[]; let cur="";
+    (t.match(/[^.!?]+[.!?]*/g)||[t]).forEach(s=>{ if((cur+s).length>180&&cur){out.push(cur);cur=s;} else cur+=s; });
+    if(cur.trim()) out.push(cur); return out;
+  }
+  function stopAll(){
+    if(synth) synth.cancel();
+    if(audio&&!audio.paused) audio.pause();
+    speaking=false; setState(false);
+  }
+  function speak(){
+    const sec=currentPage(); if(!sec) return;
+    if(sec.id==="newsletter"&&audio){ audio.play().catch(()=>{}); return; }
+    if(!synth){ return; }
+    synth.cancel(); speaking=true; setState(true);
+    const parts=chunks(pageText(sec));
+    parts.forEach((p,i)=>{
+      const u=new SpeechSynthesisUtterance(p);
+      if(voice) u.voice=voice; u.lang=(voice&&voice.lang)||"en-US"; u.rate=0.9; u.pitch=1;
+      if(i===parts.length-1) u.onend=()=>{speaking=false;setState(false);};
+      u.onerror=()=>{ if(i===parts.length-1){speaking=false;setState(false);} };
+      synth.speak(u);
+    });
+  }
+  btn.addEventListener("click",()=>{
+    const playingAudio=audio&&!audio.paused;
+    if(speaking||playingAudio) stopAll(); else speak();
+  });
+  if(audio){
+    audio.addEventListener("play",()=>{ if(synth) synth.cancel(); speaking=false; setState(true); });
+    audio.addEventListener("pause",()=>setState(false));
+    audio.addEventListener("ended",()=>setState(false));
+  }
+  addEventListener("hashchange",stopAll);
+  // Hide the button only if this device can't read aloud at all
+  if(!synth){
+    const upd=()=>{ const s=currentPage(); btn.style.display=(s&&s.id==="newsletter")?"flex":"none"; };
+    addEventListener("hashchange",upd); upd();
+  }
+})();
 
 // Load live content from the Google Sheet
 if(SHEET_URL){

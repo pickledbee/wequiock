@@ -118,7 +118,7 @@ function buildAnnouncementsTab_(ss) {
   if (isNew) {
     const today = new Date();
     sh.getRange(2, 1, 2, 5).setValues([
-      [true, today, 'Welcome, visitors!', 'Guests are always welcome. Stay after worship for coffee and fellowship.', ''],
+      [true, today, 'Welcome, visitors!', 'Guests are always welcome. We would love to meet you!', ''],
       [true, today, 'Weather cancellations', 'If services are cancelled for snow or bad weather, we will post an Urgent Notice at the top of the website.', '']
     ]);
   }
