@@ -207,6 +207,46 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .sources{font-size:.92rem;color:var(--muted);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin-top:40px}
   .sources p{margin:.4em 0}
   #noticeBar{background:#7a3b2e;color:#fff;font-size:1.2rem;padding:14px 0;text-align:center;line-height:1.4}
+
+  /* Newsletter */
+  .nl-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .nl{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(47,74,58,.08);max-width:860px;margin:0 auto;overflow:hidden}
+  .nl-mast{background:var(--green);color:#fff;text-align:center;padding:30px 24px 24px}
+  .nl-mast .kicker{letter-spacing:4px;text-transform:uppercase;font-size:.78rem;opacity:.85}
+  .nl-mast h2{color:#fff;font-size:clamp(2rem,6vw,3rem);margin:.15em 0 .1em}
+  .nl-mast .tag{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.25rem;color:#e8d9b5}
+  .nl-issue{background:var(--gold);color:#fff;text-align:center;font-weight:600;letter-spacing:2px;text-transform:uppercase;font-size:.85rem;padding:8px}
+  .nl-body{padding:30px clamp(18px,4vw,40px) 36px}
+  .nl-body h3{font-size:1.65rem;border-bottom:2px solid var(--gold);padding-bottom:4px;margin:30px 0 12px}
+  .nl-body h3:first-child{margin-top:0}
+  .nl-body p{margin:.5em 0}
+  .nl-cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  @media (max-width:700px){.nl-cols{grid-template-columns:1fr;gap:0}}
+  .nl-feature{background:var(--cream);border:1px solid var(--line);border-left:5px solid #7a3b2e;border-radius:10px;padding:18px 20px;margin:12px 0}
+  .nl-feature .when{font-weight:700;color:#7a3b2e}
+  .nl-feature h4{font-family:"Cormorant Garamond",serif;font-size:1.45rem;color:var(--green);margin:2px 0 4px}
+  .candles{list-style:none;padding:0;margin:8px 0}
+  .candles li{padding:8px 0;border-bottom:1px dashed var(--line)}
+  .candles b{color:var(--green)}
+  .glance{width:100%;border-collapse:collapse;font-size:1rem}
+  .glance td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  .glance td:first-child{white-space:nowrap;font-weight:700;color:var(--green);width:1%}
+  .nl-box{background:var(--green);color:#fff;border-radius:10px;padding:18px 20px;margin-top:14px}
+  .nl-box h4{font-family:"Cormorant Garamond",serif;font-size:1.35rem;margin:0 0 6px;color:#fff}
+  .nl-box a{color:#fff}
+  .nl-foot{text-align:center;color:var(--muted);font-size:.92rem;border-top:1px solid var(--line);padding:16px 20px;background:var(--cream)}
+  .nl-cta{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:var(--green);color:#fff;border-radius:10px;padding:16px 20px;margin-bottom:20px}
+  .nl-cta strong{font-family:"Cormorant Garamond",serif;font-size:1.4rem}
+  .nl-cta .btn{background:#fff;color:var(--green)}
+  @media print{
+    header,footer,#noticeBar,.nl-top,.page:not(#newsletter){display:none!important}
+    #newsletter{display:block!important;padding:0}
+    body{background:#fff}
+    .nl{box-shadow:none;border:none}
+    .nl-mast,.nl-issue,.nl-box,.nl-feature{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .nl-body h3{break-after:avoid}
+    .nl-feature,.nl-box,.glance tr{break-inside:avoid}
+  }
   footer{background:var(--green);color:#e8efe9;padding:36px 0;font-size:.95rem}
   footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
   footer h3{color:#fff;font-size:1.25rem}
@@ -232,6 +272,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <ul>
         <li><a href="#home">Home</a></li>
         <li><a href="#announcements">Announcements</a></li>
+        <li><a href="#newsletter">Newsletter</a></li>
         <li><a href="#membership">Membership</a></li>
         <li><a href="#give">Give</a></li>
         <li><a href="#calendar">Calendar</a></li>
@@ -305,7 +346,109 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="eyebrow">What's Happening</div>
     <h2>Announcements</h2>
     <div class="note sample">Sample announcements shown below. Replace them with the church's real news.</div>
+    <div class="nl-cta"><strong>The December Newsletter is here!</strong><a class="btn" href="#newsletter">Read the Newsletter</a></div>
     <div id="annList"></div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="page" id="newsletter">
+  <div class="wrap">
+    <div class="nl-top">
+      <div><div class="eyebrow">Church News</div><h2 style="margin:0">Newsletter</h2></div>
+      <div class="btns" style="margin:0">
+        <a class="btn" href="wequiock-newsletter-december-2026.pdf" target="_blank" rel="noopener">Download PDF</a>
+        <button class="btn ghost" type="button" onclick="try{window.print()}catch(e){}">Print</button>
+      </div>
+    </div>
+
+    <article class="nl">
+      <div class="nl-mast">
+        <div class="kicker">Wequiock Presbyterian Church</div>
+        <h2>The Bay Window</h2>
+        <div class="tag">News from the church that overlooks the bay</div>
+      </div>
+      <div class="nl-issue">December 2026 &nbsp;·&nbsp; Advent &amp; Christmas</div>
+
+      <div class="nl-body">
+        <h3>Welcome to the Season of Advent</h3>
+        <p>As the days grow shorter and the first snow settles across the fields along Wequiock Road, the church year begins again with Advent: four Sundays of waiting, watching, and preparing our hearts for the coming of Christ. It is a season of hope in the dark, and there is no better place to spend it than together with our church family.</p>
+        <p>Whether you have worshiped at Wequiock for decades or are reading about us for the first time, we would be so glad to see you this December. Come early, bring a friend, and stay for a cup of coffee.</p>
+
+        <h3>Christmas at Wequiock</h3>
+        <div class="nl-feature">
+          <div class="when">Sunday, December 6</div>
+          <h4>Christmas Pageant Rehearsal</h4>
+          <p>Everyone taking part in the pageant will gather to practice for the big day.</p>
+        </div>
+        <div class="nl-feature">
+          <div class="when">Sunday, December 13</div>
+          <h4>Christmas Pageant</h4>
+          <p>Come see the Christmas story come to life, with fellowship time following. Everyone is welcome!</p>
+        </div>
+        <div class="nl-feature">
+          <div class="when">Thursday, December 24 &nbsp;·&nbsp; 7:00&nbsp;p.m.</div>
+          <h4>Christmas Eve Service</h4>
+          <p>Join us as we celebrate the birth of our Savior. Invite your family, your neighbors, and anyone who could use a quiet, joyful place to welcome Christmas.</p>
+        </div>
+
+        <div class="nl-cols">
+          <div>
+            <h3>Lighting the Advent Wreath</h3>
+            <p>Each Sunday of Advent we light one more candle as we draw closer to Christmas:</p>
+            <ul class="candles">
+              <li><b>November 29</b> · First Sunday of Advent · Hope</li>
+              <li><b>December 6</b> · Second Sunday of Advent · Peace</li>
+              <li><b>December 13</b> · Third Sunday of Advent · Joy</li>
+              <li><b>December 20</b> · Fourth Sunday of Advent · Love</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Worship &amp; Communion</h3>
+            <p>Worship is held <strong>every Sunday at 10:00&nbsp;a.m.</strong>, with Sunday School at the same time.</p>
+            <p><strong>Communion</strong> is shared on the first Sunday of every month. This season, that means <strong>December 6</strong> and <strong>January 3</strong>.</p>
+            <div class="nl-box">
+              <h4>Sunday School Break</h4>
+              There will be <strong>no Sunday School on December 27 or January 3</strong>. Worship will be held at 10:00&nbsp;a.m. as usual. Enjoy the holidays with your families!
+            </div>
+          </div>
+        </div>
+
+        <h3>December at a Glance</h3>
+        <table class="glance">
+          <tr><td>Sun, Dec 6</td><td>Second Sunday of Advent · Worship &amp; Communion, 10:00 a.m. · Pageant Rehearsal</td></tr>
+          <tr><td>Sun, Dec 13</td><td>Third Sunday of Advent · Worship, 10:00 a.m. · Christmas Pageant with fellowship following</td></tr>
+          <tr><td>Sun, Dec 20</td><td>Fourth Sunday of Advent · Worship, 10:00 a.m.</td></tr>
+          <tr><td>Thu, Dec 24</td><td>Christmas Eve Service, 7:00 p.m.</td></tr>
+          <tr><td>Fri, Dec 25</td><td>Christmas Day</td></tr>
+          <tr><td>Sun, Dec 27</td><td>Worship, 10:00 a.m. · No Sunday School</td></tr>
+          <tr><td>Sun, Jan 3</td><td>Worship &amp; Communion, 10:00 a.m. · No Sunday School</td></tr>
+        </table>
+
+        <div class="nl-cols">
+          <div>
+            <h3>Did You Know?</h3>
+            <p>The foundation of our church was laid in October 1888, and the sanctuary was completed in 1889. In 1943, the building of the former Humboldt Presbyterian Church was moved to Wequiock and joined to the back of our church, where it serves today as our Sunday School room and Fellowship Hall. When you gather for fellowship after the pageant, you will be standing in a little piece of local history!</p>
+          </div>
+          <div>
+            <h3>Our New Website</h3>
+            <p>Wequiock now has a website at <strong>wequiockchurch.com</strong>. There you will find announcements, the church calendar, our history, and this newsletter. It is easy to read on a phone, tablet, or computer.</p>
+            <p>If services ever need to be cancelled because of snow or bad weather, a notice will appear at the top of the website, so it is a good place to check on a stormy Sunday morning.</p>
+          </div>
+        </div>
+
+        <h3>With Gratitude</h3>
+        <p>Thank you for the many ways you support Wequiock Presbyterian Church with your prayers, your time, and your gifts. If you would like to make a donation, please make your check payable to <strong>Wequiock Presbyterian Church</strong> and mail it to 4014 Wequiock Road, Green Bay, WI 54311. We are truly grateful for your generosity.</p>
+
+        <div class="nl-box" style="margin-top:26px">
+          <h4>Contact Us</h4>
+          Rev. Steve Fewell, Pastor · <a href="tel:+19206553733">920-655-3733</a><br>
+          Email: <a href="mailto:wequiockchurch@gmail.com">wequiockchurch@gmail.com</a> · Church Clerk: <a href="mailto:clerkwequiock@gmail.com">clerkwequiock@gmail.com</a><br>
+          4014 Wequiock Road, Green Bay, WI 54311
+        </div>
+      </div>
+      <div class="nl-foot">Wishing you and your family a blessed Advent and a very Merry Christmas from all of us at Wequiock Presbyterian Church.</div>
+    </article>
   </div>
 </section>
 
@@ -551,7 +694,7 @@ document.querySelectorAll("[data-photo]").forEach(box=>{
 });
 
 // Routing
-const pages=["home","announcements","membership","give","calendar","history","pictures"];
+const pages=["home","announcements","newsletter","membership","give","calendar","history","pictures"];
 function route(){
   const id=pages.includes(location.hash.slice(1))?location.hash.slice(1):"home";
   document.querySelectorAll(".page").forEach(p=>p.classList.toggle("show",p.id===id));
